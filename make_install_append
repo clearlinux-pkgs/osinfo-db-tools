@@ -1,0 +1,2 @@
+mkdir -p %{buildroot}/usr/share/osinfo
+tar --strip-components=1 -xJf %{SOURCE1} -C %{buildroot}/usr/share/osinfo
