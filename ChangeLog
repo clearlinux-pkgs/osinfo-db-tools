@@ -1,4 +1,72 @@
+2018-06-20  Daniel P. Berrangé  <berrange@redhat.com>
+
+	Update NEWS for 1.2.0 release
+
+	Re-add script for doing releases
+
+2017-12-04  Daniel P. Berrange  <berrange@redhat.com>
+
+	Refresh translations from zanata
+
+2017-10-26  Daniel P. Berrange  <berrange@redhat.com>
+
+	Don't expand entities when parsing XML
+	The XML_PARSE_NOENT flag to libxml will cause it to expand all entities in the
+	input XML document when parsing. Doing this is bad practice if the XML input
+	file comes from an untrusted source, because it can cause the XML parser to load
+	arbitrary files that are readable by the user running XML parsing. This is does
+	not have an security consequences given the scenario in which osinfo-db-validate
+	is run since the intended usage is to validate files that are written by the
+	local user, or by the upstream libosinfo maintainers.
+
+	In the future though, libosinfo might be able to dynamically download data from
+	the website to refresh its local database, so it is wise to avoid entity
+	expansion as a hardening step.
+
+2017-09-21  Andrea Bolognani  <abologna@redhat.com>
+
+	maint: Drop autobuild.sh
+	The Test-AutoBuild project, that this script is supposed to be used
+	with, hasn't seen any activity in ~6 years; libvirt's own CI, which
+	also performs periodic builds of osinfo-db-tools, is running on
+	Jenkins with a completely independent setup that doesn't use the
+	script at all.
+
+	Reviewed-by: Daniel P. Berrange <berrange@redhat.com>
+
+	bracket-spacing: Don't hardcode Perl interpreter path
+	This is particularly useful on operating systems that don't ship
+	Perl as part of the base system (eg. FreeBSD) while still working
+	just as well as it did before on Linux.
+
+	Reviewed-by: Daniel P. Berrange <berrange@redhat.com>
+	Acked-by: Christophe Fergeau <cfergeau@redhat.com>
+
+	configure: Look for Perl interpreter path
+	The $(PERL) variable is used in cfg.mk, but configure is not
+	actually looking for the Perl interpreter path, so it will always
+	end up being empty.
+
+	Reviewed-by: Daniel P. Berrange <berrange@redhat.com>
+	Acked-by: Christophe Fergeau <cfergeau@redhat.com>
+
+2017-04-18  Roman Bogorodskiy  <bogorodskiy@gmail.com>
+
+	Fix build with clang
+	The osinfo_db_import_create_reg() function implements error handling
+	via jumping to cleanup and returning, however, this way the return
+	value is not initialised. This breaks build with clang and probably
+	could lead to an undefined behavior for users of this function.
+
+	Fix by initialising ret with -1 by default.
+
+2017-02-23  Daniel P. Berrange  <berrange@redhat.com>
+
+	Remove references to fedorahosted.org from spec files
+
 2016-10-26  Daniel P. Berrange  <berrange@redhat.com>
+
+	Post release version bump to 1.2.0
 
 	Add release notes for 1.1.0
 
@@ -508,6 +576,8 @@
 	gitignore: Ignore build-aux/compile
 	Which appears on f21
 
+2014-09-21  Cole Robinson  <crobinso@redhat.com>
+
 	m4: Update manywarnings from gnulib
 	Fixes these noisy errors on Fedora 21:
 
@@ -618,7 +688,7 @@
 
 	Release 0.2.7
 
-2013-04-12  Zeeshan Ali (Khattak)  <zeeshanak@gnome.org>
+2013-04-11  Zeeshan Ali (Khattak)  <zeeshanak@gnome.org>
 
 	(Very late) post-release version bump
 

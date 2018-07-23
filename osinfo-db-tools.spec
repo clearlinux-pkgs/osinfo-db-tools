@@ -5,18 +5,19 @@
 # Source0 file verified with key 0xBE86EBB415104FDF (dan@berrange.com)
 #
 Name     : osinfo-db-tools
-Version  : 1.1.0
-Release  : 2
-URL      : https://releases.pagure.org/libosinfo/osinfo-db-tools-1.1.0.tar.gz
-Source0  : https://releases.pagure.org/libosinfo/osinfo-db-tools-1.1.0.tar.gz
+Version  : 1.2.0
+Release  : 3
+URL      : https://releases.pagure.org/libosinfo/osinfo-db-tools-1.2.0.tar.gz
+Source0  : https://releases.pagure.org/libosinfo/osinfo-db-tools-1.2.0.tar.gz
 Source1  : https://releases.pagure.org/libosinfo/osinfo-db-20180416.tar.xz
-Source99 : https://releases.pagure.org/libosinfo/osinfo-db-tools-1.1.0.tar.gz.asc
+Source99 : https://releases.pagure.org/libosinfo/osinfo-db-tools-1.2.0.tar.gz.asc
 Summary  : Tools for managing the osinfo database
 Group    : Development/Tools
 License  : GPL-2.0 GPL-2.0+
 Requires: osinfo-db-tools-bin
+Requires: osinfo-db-tools-license
 Requires: osinfo-db-tools-locales
-Requires: osinfo-db-tools-doc
+Requires: osinfo-db-tools-man
 Requires: osinfo-db-tools-data
 BuildRequires : gettext
 BuildRequires : intltool
@@ -36,6 +37,8 @@ information about operating systems for use with virtualization
 Summary: bin components for the osinfo-db-tools package.
 Group: Binaries
 Requires: osinfo-db-tools-data
+Requires: osinfo-db-tools-license
+Requires: osinfo-db-tools-man
 
 %description bin
 bin components for the osinfo-db-tools package.
@@ -49,12 +52,12 @@ Group: Data
 data components for the osinfo-db-tools package.
 
 
-%package doc
-Summary: doc components for the osinfo-db-tools package.
-Group: Documentation
+%package license
+Summary: license components for the osinfo-db-tools package.
+Group: Default
 
-%description doc
-doc components for the osinfo-db-tools package.
+%description license
+license components for the osinfo-db-tools package.
 
 
 %package locales
@@ -65,19 +68,27 @@ Group: Default
 locales components for the osinfo-db-tools package.
 
 
+%package man
+Summary: man components for the osinfo-db-tools package.
+Group: Default
+
+%description man
+man components for the osinfo-db-tools package.
+
+
 %prep
 tar -xf %{SOURCE1}
 cd ..
-%setup -q -n osinfo-db-tools-1.1.0
-mkdir -p %{_topdir}/BUILD/osinfo-db-tools-1.1.0/osinfo-db
-mv %{_topdir}/BUILD/osinfo-db-20180416/* %{_topdir}/BUILD/osinfo-db-tools-1.1.0/osinfo-db
+%setup -q -n osinfo-db-tools-1.2.0
+mkdir -p %{_topdir}/BUILD/osinfo-db-tools-1.2.0/osinfo-db
+mv %{_topdir}/BUILD/osinfo-db-20180416/* %{_topdir}/BUILD/osinfo-db-tools-1.2.0/osinfo-db
 
 %build
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1524867213
+export SOURCE_DATE_EPOCH=1532310376
 %configure --disable-static
 make  %{?_smp_mflags}
 
@@ -89,8 +100,11 @@ export no_proxy=localhost,127.0.0.1,0.0.0.0
 make VERBOSE=1 V=1 %{?_smp_mflags} check
 
 %install
-export SOURCE_DATE_EPOCH=1524867213
+export SOURCE_DATE_EPOCH=1532310376
 rm -rf %{buildroot}
+mkdir -p %{buildroot}/usr/share/doc/osinfo-db-tools
+cp COPYING %{buildroot}/usr/share/doc/osinfo-db-tools/COPYING
+cp osinfo-db/LICENSE %{buildroot}/usr/share/doc/osinfo-db-tools/osinfo-db_LICENSE
 %make_install
 %find_lang osinfo-db-tools
 ## make_install_append content
@@ -645,9 +659,17 @@ tar --strip-components=1 -xJf %{SOURCE1} -C %{buildroot}/usr/share/osinfo
 /usr/share/osinfo/platform/xen.org/xen-4.1.0.xml
 /usr/share/osinfo/schema/osinfo.rng
 
-%files doc
+%files license
 %defattr(-,root,root,-)
-%doc /usr/share/man/man1/*
+/usr/share/doc/osinfo-db-tools/COPYING
+/usr/share/doc/osinfo-db-tools/osinfo-db_LICENSE
+
+%files man
+%defattr(-,root,root,-)
+/usr/share/man/man1/osinfo-db-export.1
+/usr/share/man/man1/osinfo-db-import.1
+/usr/share/man/man1/osinfo-db-path.1
+/usr/share/man/man1/osinfo-db-validate.1
 
 %files locales -f osinfo-db-tools.lang
 %defattr(-,root,root,-)
