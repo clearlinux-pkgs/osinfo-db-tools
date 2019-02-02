@@ -1,4 +1,140 @@
+2019-02-01  Fabiano Fidêncio  <fidencio@redhat.com>
+
+	Update NEWS for 1.3.0 release
+
+	Refresh translations from zanata
+
+2019-01-09  Fabiano Fidêncio  <fidencio@redhat.com>
+
+	README: Update download information
+	Let's point to https://libosinfo.org/download/ instead of pointing to
+	pagure, as it could change again in the future.
+
+2019-01-04  Fabiano Fidêncio  <fidencio@redhat.com>
+
+	README: Reword the patch submission paragraph
+	Just mention that the libosinfo's mailing list is the *preferred* way to
+	send patches. More info, as the one about the project accepting Merge
+	Request, can be found in the project's website.
+
+	Reviewed-by: Christophe Fergeau <cfergeau@redhat.com>
+
+	README: Update download link
+	Let's point to pagure instead of referring to the already sunset
+	fedorahosted.
+
+	Reviewed-by: Christophe Fergeau <cfergeau@redhat.com>
+
+2018-12-20  Daniel P. Berrangé  <berrange@redhat.com>
+
+	osinfo-db-import: fix loading of local files
+	When the argument can be either a URI or a local path, it the
+	g_file_new_for_commandline_arg constructor must be used. In
+	addition, when the GFile is a native path, we must not use the original
+	path, but instead call g_file_get_path(), so that file:/// URIs are
+	correctly handled by stripping the protocol.
+
+2018-12-19  Fabiano Fidêncio  <fidencio@redhat.com>
+
+	import: Introduce "--latest" option
+	--latest option checks whether there's a new osinfo-db available from
+	the official libosinfo's release website, downloads and install it.
+
+	The download and installation is only then when the version available in
+	libosinfo's release website is newer than the version installed in the
+	(specified location in) system.
+
+	The file we query in order to get the "latest" available version
+	(https://db.libosinfo.org/latest.json) is a json that looks like:
+	{
+	    "version": 1,
+	    "release": {
+	        "version": "20181203",
+	        "archive": "https://releases.pagure.org/libosinfo/osinfo-db-20181203.tar.xz",
+	        "signature": "https://releases.pagure.org/libosinfo/osinfo-db-20181203.tar.xz.asc"
+	    }
+	}
+
+	The file will be automatically updated whenever a new release is done
+	(in a day interval).
+
+	This commit also introduces a new dependency: json-glib, which is used
+	to easily manipulate the queried file's content.
+
+	Reviewed-by: Daniel P. Berrangé <berrange@redhat.com>
+
+	import: Learn how to deal with URLs
+	Reviewed-by: Daniel P. Berrangé <berrange@redhat.com>
+
+	import: Remove unused variable
+	Reviewed-by: Daniel P. Berrangé <berrange@redhat.com>
+
+2018-10-15  Fabiano Fidêncio  <fidencio@redhat.com>
+
+	tools: Remove FSF address from source files
+	Let's follow what's already done in libosinfo and recommended from
+	http://www.gnu.org/licenses/gpl-howto.html and do not put FSF address in
+	the source files. Instead, just link to the FSF website.
+
+	Based on:
+	https://gitlab.com/libosinfo/libosinfo/commit/3343d0f9c1b0937824bee2527612047bc2e75f84
+
+	Reviewed-by: Daniel P. Berrangé <berrange@redhat.com>
+
+2018-10-09  Fabiano Fidêncio  <fidencio@redhat.com>
+
+	authors,maintainers: Add all gitlab's group members
+	Let's update the list of authors/maintainers accordingly to the
+	libosinfo's gitlab group members.
+
+	The list has been put in alphabetical order on purpose.
+
+	Reviewed-by: Cole Robinson <crobinso@redhat.com>
+
+2018-09-24  Fabiano Fidêncio  <fidencio@redhat.com>
+
+	import: update manpage
+	Mention in the manpage that if no ARCHIVE-FILE is passed or when
+	ARCHIVE-FILE is -, it'll be read from the standard input.
+
+	Reviewed-by: Christophe Fergeau <cfergeau@redhat.com>
+
+2018-09-21  Fabiano Fidêncio  <fidencio@redhat.com>
+
+	path: Add a "\n" to the error message
+	Reviewed-by: Christophe Fergeau <cfergeau@redhat.com>
+
+	validate: Add a "\n" to the error messages
+	Reviewed-by: Christophe Fergeau <cfergeau@redhat.com>
+
+	export: Add a "\n" to the error messages
+	Reviewed-by: Christophe Fergeau <cfergeau@redhat.com>
+
+	export: Don't call g_object_unref(NULL) in _create_file()
+	In osinfo_db_create_file() g_file_query_info() may fail which will leave
+	@info as a NULL and we'll try to free it in the cleanup causing:
+	(osinfo-db-export:32261): GLib-GObject-CRITICAL **: 11:00:08.488: g_object_unref: assertion 'G_IS_OBJECT (object)' failed
+
+	In order to avoid that, let's only call g_object_unref() when @info is
+	not NULL.
+
+	Reviewed-by: Christophe Fergeau <cfergeau@redhat.com>
+
+	import: Add a "\n" to the error messages
+	Reviewed-by: Christophe Fergeau <cfergeau@redhat.com>
+
+2018-09-05  Daniel P. Berrangé  <berrange@redhat.com>
+
+	Fix format specifier as glib2 requires libc compatible formats
+	PRId64 is the platform native format, but glib2 guarantees
+	libc compatible formats even on Windows. So code must use
+	the G_GUINT64_FORMAT macro instead.
+
+	Refresh translations from zanata
+
 2018-06-20  Daniel P. Berrangé  <berrange@redhat.com>
+
+	Post release version bump
 
 	Update NEWS for 1.2.0 release
 
@@ -576,8 +712,6 @@
 	gitignore: Ignore build-aux/compile
 	Which appears on f21
 
-2014-09-21  Cole Robinson  <crobinso@redhat.com>
-
 	m4: Update manywarnings from gnulib
 	Fixes these noisy errors on Fedora 21:
 
@@ -688,7 +822,7 @@
 
 	Release 0.2.7
 
-2013-04-11  Zeeshan Ali (Khattak)  <zeeshanak@gnome.org>
+2013-04-12  Zeeshan Ali (Khattak)  <zeeshanak@gnome.org>
 
 	(Very late) post-release version bump
 
