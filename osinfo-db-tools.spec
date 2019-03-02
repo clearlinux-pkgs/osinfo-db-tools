@@ -5,12 +5,12 @@
 # Source0 file verified with key 0xEE926C2BDACC177B (fabiano@fidencio.org)
 #
 Name     : osinfo-db-tools
-Version  : 1.3.0
-Release  : 4
-URL      : https://releases.pagure.org/libosinfo/osinfo-db-tools-1.3.0.tar.gz
-Source0  : https://releases.pagure.org/libosinfo/osinfo-db-tools-1.3.0.tar.gz
+Version  : 1.4.0
+Release  : 5
+URL      : https://releases.pagure.org/libosinfo/osinfo-db-tools-1.4.0.tar.gz
+Source0  : https://releases.pagure.org/libosinfo/osinfo-db-tools-1.4.0.tar.gz
 Source1  : https://releases.pagure.org/libosinfo/osinfo-db-20180416.tar.xz
-Source99 : https://releases.pagure.org/libosinfo/osinfo-db-tools-1.3.0.tar.gz.asc
+Source99 : https://releases.pagure.org/libosinfo/osinfo-db-tools-1.4.0.tar.gz.asc
 Summary  : Tools for managing the osinfo database
 Group    : Development/Tools
 License  : GPL-2.0 GPL-2.0+
@@ -20,7 +20,6 @@ Requires: osinfo-db-tools-license = %{version}-%{release}
 Requires: osinfo-db-tools-locales = %{version}-%{release}
 Requires: osinfo-db-tools-man = %{version}-%{release}
 BuildRequires : gettext
-BuildRequires : intltool
 BuildRequires : perl(XML::Parser)
 BuildRequires : pkgconfig(gio-2.0)
 BuildRequires : pkgconfig(glib-2.0)
@@ -39,7 +38,6 @@ Summary: bin components for the osinfo-db-tools package.
 Group: Binaries
 Requires: osinfo-db-tools-data = %{version}-%{release}
 Requires: osinfo-db-tools-license = %{version}-%{release}
-Requires: osinfo-db-tools-man = %{version}-%{release}
 
 %description bin
 bin components for the osinfo-db-tools package.
@@ -78,18 +76,18 @@ man components for the osinfo-db-tools package.
 
 
 %prep
-%setup -q -n osinfo-db-tools-1.3.0
+%setup -q -n osinfo-db-tools-1.4.0
 cd ..
-%setup -q -T -D -n osinfo-db-tools-1.3.0 -b 1
+%setup -q -T -D -n osinfo-db-tools-1.4.0 -b 1
 mkdir -p osinfo-db
-cp -r %{_topdir}/BUILD/osinfo-db-20180416/* %{_topdir}/BUILD/osinfo-db-tools-1.3.0/osinfo-db
+cp -r %{_topdir}/BUILD/osinfo-db-20180416/* %{_topdir}/BUILD/osinfo-db-tools-1.4.0/osinfo-db
 
 %build
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1549123255
+export SOURCE_DATE_EPOCH=1551541201
 %configure --disable-static
 make  %{?_smp_mflags}
 
@@ -101,7 +99,7 @@ export no_proxy=localhost,127.0.0.1,0.0.0.0
 make VERBOSE=1 V=1 %{?_smp_mflags} check
 
 %install
-export SOURCE_DATE_EPOCH=1549123255
+export SOURCE_DATE_EPOCH=1551541201
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/osinfo-db-tools
 cp COPYING %{buildroot}/usr/share/package-licenses/osinfo-db-tools/COPYING

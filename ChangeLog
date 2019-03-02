@@ -1,4 +1,28 @@
+2019-03-01  Fabiano Fidêncio  <fidencio@redhat.com>
+
+	Update NEWS for 1.4.0 release
+
+	Refresh translations from zanata
+
+2019-02-19  Martin Blanchard  <tchaik@gmx.com>
+
+	build: Prefer gettext over intltool
+	intltool is outdated:
+
+	https://wiki.gnome.org/Initiatives/GnomeGoals/GettextMigration
+
+	Reviewed-by: Fabiano Fidêncio <fidencio@redhat.com>
+
+	build: Prefer autoreconf over gnome-autogen
+	gnome-common is completely deprecated:
+
+	https://wiki.gnome.org/Projects/GnomeCommon/Migration
+
+	Reviewed-by: Fabiano Fidêncio <fidencio@redhat.com>
+
 2019-02-01  Fabiano Fidêncio  <fidencio@redhat.com>
+
+	Post release version bump to 1.4.0
 
 	Update NEWS for 1.3.0 release
 
