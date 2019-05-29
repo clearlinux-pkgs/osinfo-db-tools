@@ -1,4 +1,245 @@
+2019-05-09  Fabiano Fidêncio  <fidencio@redhat.com>
+
+	Update NEWS for 1.5.0 release
+	Reviewed-by: Cole Robinson <crobinso@redhat.com>
+
+2019-05-06  Fabiano Fidêncio  <fidencio@redhat.com>
+
+	Refresh translations from zanata
+
+2019-05-02  Fabiano Fidêncio  <fidencio@redhat.com>
+
+	test_osinfo_db_path: Unset OSINFO_*_DIR envvars
+	Let's just unset the OSINFO_{SYSTEM,DATA,USER}_DIR environment variables
+	in our tests, in case those were externally set for some reason.
+
+	Reviewed-by: Cole Robinson <crobinso@redhat.com>
+
+2019-04-25  Fabiano Fidêncio  <fidencio@redhat.com>
+
+	configure: Use "=" for `test` instead of "=="
+	`man test` only lists "=" instead of "==".
+
+	With that in mind, let's change how we compare the strings to always use
+	a single "=" sign.
+
+	Reviewed-by: Eric Blake <eblake@redhat.com>
+
+	configure: Fix EXECUTE_TESTS condition
+	When b380daf430 fixed the non-portable shell test syntax, a new `test`
+	should have been added so both conditions are properly evaluated.
+
+	Example:
+	[test "x$foo" = "xyes" && test "x$bar = "xyes"] instead of
+	[test "x$foo" = "yes" -a "x$bar" = "xyes"].
+
+	Reviewed-by: Eric Blake <eblake@redhat.com>
+
+2019-04-23  Fabiano Fidêncio  <fidencio@redhat.com>
+
+	spec: Require GVFS
+	GVFS is required as g_file_new_from_path() and g_file_new_from_uri()
+	rely on GVFS.
+
+	Reviewed-by: Cole Robinson <crobinso@redhat.com>
+
+2019-04-16  Daniel P. Berrangé  <berrange@redhat.com>
+
+	configure: fix non-portable shell test syntax
+
+2019-04-15  Fabiano Fidêncio  <fidencio@redhat.com>
+
+	spec: Add %check target (and the needed deps)
+	Now that we have tests as part of osinfo-db-tools, let's enable them
+	when building an RPM.
+
+	A new set of BuildRequires dependencies have been added as our tests
+	depend on python3, python3-pytest, and python3-requests.
+
+	The %check target has been added unconditionally the tests are only
+	executed in case the deps are found in the system.
+
+	Reviewed-by: Cole Robinson <crobinso@redhat.com>
+
+	tests: Only run the tests if deps are installed
+	Let's check whether we have all the deps installed in the system and
+	only run the tests if that's the case.
+
+	Reviewed-by: Cole Robinson <crobinso@redhat.com>
+
+2019-04-10  Fabiano Fidêncio  <fidencio@redhat.com>
+
+	readme: Add "Testing" section
+	Add info about testing osinfo-db-tools, including how to run the network
+	based tests.
+
+	Reviewed-by: Cole Robinson <crobinso@redhat.com>
+
+	readme: Add optional testing dependencies
+	With the addition of the osinfo-db-tools tests, osinfo-db-tools has new
+	optional dependencies as:
+	- python3
+	- python3-pytest
+	- python3-requests
+
+	Knowing that, let's update our README to reflect the current state of
+	the project.
+
+	Reviewed-by: Cole Robinson <crobinso@redhat.com>
+
+2019-04-08  Fabiano Fidêncio  <fidencio@redhat.com>
+
+	tests: Add osinfo-db-{export,import} tests
+	Add a set of functional tests to ensure osinfo-db-export and
+	osinfo-db-import work as expected. The covered scenearios are:
+	- osinfo-db-export DIR
+	  - It's a negative test
+	- osinfo-db-export --system and osinfo-db-import --system
+	- osinfo-db-export --local FILENAME
+	- osinfo-db-import --local FILENAME
+	- cat FILENAME | osinfo-db-import -
+	- cat FILENAME | osinfo-db-import
+	- osinfo-db-export --user --license LICENSE --version VERSION
+	  VERSIONED_FILENAME
+	- osinfo-db-import --root / --user VERSIONED_FILENAME
+	- osinfo-db-import --user URL
+	- osinfo-db-import --latest
+
+	The last two tests are only enabled when OSINFO_DB_TOOLS_NETWORK_TESTS
+	is set.
+
+	Last but not least, differently than the tests for osinfo-db-path and
+	osinfo-db-validate, those tests pretty much only make sense when taken
+	as pairs. So, we export a db, import it back and ensure the content is
+	the same.
+
+	https://gitlab.com/libosinfo/osinfo-db-tools/issues/2
+
+	Reviewed-by: Cole Robinson <crobinso@redhat.com>
+
+	tests: Add osinfo-db-validate tests
+	Add a set of functional tests to ensure osinfo-db-validate works as
+	epxected. The covered scenarios are:
+	- osinfo-db-validate --system
+	- osinfo-db-validate --local
+	- osinfo-db-validate --user
+	- osindo-db-validate --dir
+	  - For this, a negative test was also added
+
+	https://gitlab.com/libosinfo/osinfo-db-tools/issues/2
+
+	Reviewed-by: Cole Robinson <crobinso@redhat.com>
+
+	tests: Add osinfo-db-path tests
+	Add a set of functional tests to ensure osinfo-db-path works as
+	expected. The covered scenarios are:
+	- osinfo-db-path --system
+	- osinfo-db-path --local
+	- osinfo-db-oath --user
+	- osinfo-db-path --dir
+	- osinfo-db-path --root ROOT --system
+
+	https://gitlab.com/libosinfo/osinfo-db-tools/issues/2
+
+	Reviewed-by: Cole Robinson <crobinso@redhat.com>
+
+	tests: Add tests data
+	The added data consists in:
+	- positive:
+	  - valid data for validation, importing, exporting tests
+	- negative:
+	  - invalid data for validation tests
+	- license:
+	  - just a license file to be used for exporting tests
+
+	https://gitlab.com/libosinfo/osinfo-db-tools/issues/2
+
+	Reviewed-by: Cole Robinson <crobinso@redhat.com>
+
+	tests: Add util.py
+	util.py contains helpers for getting the path of both binaries and data
+	to be used in our tests.
+
+	https://gitlab.com/libosinfo/osinfo-db-tools/issues/2
+
+	Reviewed-by: Cole Robinson <crobinso@redhat.com>
+
+	makefile: Add needed machinery for tests
+	https://gitlab.com/libosinfo/osinfo-db-tools/issues/2
+
+	Reviewed-by: Cole Robinson <crobinso@redhat.com>
+
+	util: Do not assume --root argument ends with '/'
+	Current situation is that whenever --root is passed its argument has to
+	finish with a '/' otherwise the system, local, or user dir would be
+	concatened to it as "%s%s".
+
+	Instead of building the filename by ourselves, let's just rely on
+	g_build_filename().
+
+	Reviewed-by: Cole Robinson <crobinso@redhat.com>
+
+	validate: Do not leak the uri in validate_file_regular()
+	Reviewed-by: Cole Robinson <crobinso@redhat.com>
+
+	export: Fix wording in help output
+	export never install anything, the wording used seems to a c&p from
+	osinfo-db-import.
+
+	Reviewed-by: Cole Robinson <crobinso@redhat.com>
+	Reviewed-by: Pino Toscano <ptoscano@redhat.com>
+
+2019-03-27  Fabiano Fidêncio  <fidencio@redhat.com>
+
+	Add a git-publish configuration file
+
+2019-03-08  Fabiano Fidêncio  <fidencio@redhat.com>
+
+	readme: Add json-glib as dependency
+	Since 1.3.0 we depend on json-glib.
+
+	Reviewed-by: Christophe Fergeau <cfergeau@redhat.com>
+
+2019-03-07  Fabiano Fidêncio  <fidencio@redhat.com>
+
+	mingw,spec: Fix the Source URL
+	https://releases.pagure.org/libosinfo/... instead of
+	https://releases.pagure.io/libosinfo/...
+
+	Reviewed-by: Pino Toscano <ptoscano@redhat.com>
+
+	mingw,spec: Remove obsolete Group tag
+	References: https://fedoraproject.org/wiki/Changes/Remove_Group_Tag
+
+	And "The Group: tag is not required in any live Fedora or EPEL release.
+	RHEL5 did need it, but EPEL5 did not as it was supplied automatically
+	via magic in the epel-rpm-macros package. The Packaging Guidelines have
+	indicated that the Group: tag should not be used since March of 2017."
+
+	Reviewed-by: Christophe Fergeau <cfergeau@redhat.com>
+	Reviewed-by: Pino Toscano <ptoscano@redhat.com>
+
+	spec: Add "BuildRequires: gcc"
+	This change is bringing upstream the changes done on Fedora on
+	5195c8b989be.
+
+	Reference: https://fedoraproject.org/wiki/Changes/Remove_GCC_from_BuildRoot
+
+	Reviewed-by: Pino Toscano <ptoscano@redhat.com>
+
+	mingw: Use %find_lang macro
+	Reviewed-by: Christophe Fergeau <cfergeau@redhat.com>
+
+2019-03-05  Fabiano Fidêncio  <fidencio@redhat.com>
+
+	mingw: Add mingw-json-glib as a dependency
+	Since 1.3.0 we depend on json-glib.
+
+	Reviewed-by: Cole Robinson <crobinso@redhat.com>
+
 2019-03-01  Fabiano Fidêncio  <fidencio@redhat.com>
+
+	Post release version bump to 1.5.0
 
 	Update NEWS for 1.4.0 release
 
