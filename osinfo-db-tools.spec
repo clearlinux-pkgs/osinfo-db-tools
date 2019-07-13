@@ -6,10 +6,10 @@
 #
 Name     : osinfo-db-tools
 Version  : 1.5.0
-Release  : 6
+Release  : 7
 URL      : https://releases.pagure.org/libosinfo/osinfo-db-tools-1.5.0.tar.gz
 Source0  : https://releases.pagure.org/libosinfo/osinfo-db-tools-1.5.0.tar.gz
-Source1  : https://releases.pagure.org/libosinfo/osinfo-db-20180416.tar.xz
+Source1  : https://releases.pagure.org/libosinfo/osinfo-db-20190611.tar.xz
 Source99 : https://releases.pagure.org/libosinfo/osinfo-db-tools-1.5.0.tar.gz.asc
 Summary  : Tools for managing the osinfo database
 Group    : Development/Tools
@@ -28,6 +28,7 @@ BuildRequires : pkgconfig(json-glib-1.0)
 BuildRequires : pkgconfig(libarchive)
 BuildRequires : pkgconfig(libxml-2.0)
 BuildRequires : pkgconfig(libxslt)
+BuildRequires : pytest
 BuildRequires : requests
 
 %description
@@ -81,14 +82,14 @@ man components for the osinfo-db-tools package.
 cd ..
 %setup -q -T -D -n osinfo-db-tools-1.5.0 -b 1
 mkdir -p osinfo-db
-cp -r %{_topdir}/BUILD/osinfo-db-20180416/* %{_topdir}/BUILD/osinfo-db-tools-1.5.0/osinfo-db
+cp -r %{_topdir}/BUILD/osinfo-db-20190611/* %{_topdir}/BUILD/osinfo-db-tools-1.5.0/osinfo-db
 
 %build
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
-export LANG=C
-export SOURCE_DATE_EPOCH=1559168975
+export LANG=C.UTF-8
+export SOURCE_DATE_EPOCH=1563038883
 export GCC_IGNORE_WERROR=1
 export CFLAGS="$CFLAGS -fno-lto "
 export FCFLAGS="$CFLAGS -fno-lto "
@@ -98,14 +99,14 @@ export CXXFLAGS="$CXXFLAGS -fno-lto "
 make  %{?_smp_mflags}
 
 %check
-export LANG=C
+export LANG=C.UTF-8
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 make VERBOSE=1 V=1 %{?_smp_mflags} check
 
 %install
-export SOURCE_DATE_EPOCH=1559168975
+export SOURCE_DATE_EPOCH=1563038883
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/osinfo-db-tools
 cp COPYING %{buildroot}/usr/share/package-licenses/osinfo-db-tools/COPYING
@@ -141,6 +142,7 @@ tar --strip-components=1 -xJf %{SOURCE1} -C %{buildroot}/usr/share/osinfo
 /usr/share/osinfo/device/pcisig.com/pci-1000-0012.d/class.xml
 /usr/share/osinfo/device/pcisig.com/pci-1013-00b8.d/class.xml
 /usr/share/osinfo/device/pcisig.com/pci-1022-2000.d/class.xml
+/usr/share/osinfo/device/pcisig.com/pci-1033-0194.d/class.xml
 /usr/share/osinfo/device/pcisig.com/pci-10ec-8029.d/class.xml
 /usr/share/osinfo/device/pcisig.com/pci-10ec-8139.d/class.xml
 /usr/share/osinfo/device/pcisig.com/pci-1234-1111.xml
@@ -162,11 +164,15 @@ tar --strip-components=1 -xJf %{SOURCE1} -C %{buildroot}/usr/share/osinfo
 /usr/share/osinfo/device/pcisig.com/pci-1af4-1049.d/class.xml
 /usr/share/osinfo/device/pcisig.com/pci-1af4-1050.d/class.xml
 /usr/share/osinfo/device/pcisig.com/pci-1af4-1052.d/class.xml
+/usr/share/osinfo/device/pcisig.com/pci-1b36-0004.d/class.xml
 /usr/share/osinfo/device/pcisig.com/pci-1b36-0100.d/class.xml
 /usr/share/osinfo/device/pcisig.com/pci-8086-100e.d/class.xml
+/usr/share/osinfo/device/pcisig.com/pci-8086-10d3.d/class.xml
 /usr/share/osinfo/device/pcisig.com/pci-8086-2415.d/class.xml
 /usr/share/osinfo/device/pcisig.com/pci-8086-25ab.d/class.xml
 /usr/share/osinfo/device/pcisig.com/pci-8086-2668.d/class.xml
+/usr/share/osinfo/device/pcisig.com/pci-8086-293e.d/class.xml
+/usr/share/osinfo/device/qemu.org/chipset-x86-q35.xml
 /usr/share/osinfo/device/usb.org/usb-80ee-0021.d/class.xml
 /usr/share/osinfo/device/xen.org/xen-console.xml
 /usr/share/osinfo/device/xen.org/xen-pci.xml
@@ -176,10 +182,13 @@ tar --strip-components=1 -xJf %{SOURCE1} -C %{buildroot}/usr/share/osinfo
 /usr/share/osinfo/device/xen.org/xen-vkbd.xml
 /usr/share/osinfo/device/xen.org/xen-vscsi.xml
 /usr/share/osinfo/device/xen.org/xen-vtpm.xml
+/usr/share/osinfo/install-script/centos.org/centos-kickstart-desktop.xml
+/usr/share/osinfo/install-script/centos.org/centos-kickstart-jeos.xml
 /usr/share/osinfo/install-script/debian.org/debian-preseed-desktop.xml
 /usr/share/osinfo/install-script/debian.org/debian-preseed-jeos.xml
 /usr/share/osinfo/install-script/fedoraproject.org/fedora-kickstart-desktop.xml
 /usr/share/osinfo/install-script/fedoraproject.org/fedora-kickstart-jeos.xml
+/usr/share/osinfo/install-script/fedoraproject.org/silverblue-kickstart-desktop.xml
 /usr/share/osinfo/install-script/microsoft.com/windows-cmd-desktop.xml
 /usr/share/osinfo/install-script/microsoft.com/windows-reg-desktop.xml
 /usr/share/osinfo/install-script/microsoft.com/windows-sif-desktop.xml
@@ -190,10 +199,17 @@ tar --strip-components=1 -xJf %{SOURCE1} -C %{buildroot}/usr/share/osinfo
 /usr/share/osinfo/install-script/opensuse.org/opensuse-autoyast-jeos.xml
 /usr/share/osinfo/install-script/redhat.com/rhel-kickstart-desktop.xml
 /usr/share/osinfo/install-script/redhat.com/rhel-kickstart-jeos.xml
+/usr/share/osinfo/install-script/ubuntu.com/ubuntu-preseed-desktop.xml
 /usr/share/osinfo/install-script/ubuntu.com/ubuntu-preseed-jeos.xml
 /usr/share/osinfo/os/alpinelinux.org/alpinelinux-3.5.xml
 /usr/share/osinfo/os/alpinelinux.org/alpinelinux-3.6.xml
 /usr/share/osinfo/os/alpinelinux.org/alpinelinux-3.7.xml
+/usr/share/osinfo/os/alpinelinux.org/alpinelinux-3.8.xml
+/usr/share/osinfo/os/altlinux.org/alt-8.0.xml
+/usr/share/osinfo/os/altlinux.org/alt-8.1.xml
+/usr/share/osinfo/os/altlinux.org/alt-8.2.xml
+/usr/share/osinfo/os/altlinux.org/alt-p8.starterkits.xml
+/usr/share/osinfo/os/altlinux.org/alt-sisyphus.xml
 /usr/share/osinfo/os/altlinux.org/altlinux-1.0.xml
 /usr/share/osinfo/os/altlinux.org/altlinux-2.0.xml
 /usr/share/osinfo/os/altlinux.org/altlinux-2.2.xml
@@ -204,6 +220,7 @@ tar --strip-components=1 -xJf %{SOURCE1} -C %{buildroot}/usr/share/osinfo
 /usr/share/osinfo/os/altlinux.org/altlinux-5.0.xml
 /usr/share/osinfo/os/altlinux.org/altlinux-6.0.xml
 /usr/share/osinfo/os/altlinux.org/altlinux-7.0.xml
+/usr/share/osinfo/os/android-x86.org/android-x86-8.1.xml
 /usr/share/osinfo/os/apple.com/macosx-10.0.xml
 /usr/share/osinfo/os/apple.com/macosx-10.1.xml
 /usr/share/osinfo/os/apple.com/macosx-10.2.xml
@@ -212,14 +229,29 @@ tar --strip-components=1 -xJf %{SOURCE1} -C %{buildroot}/usr/share/osinfo
 /usr/share/osinfo/os/apple.com/macosx-10.5.xml
 /usr/share/osinfo/os/apple.com/macosx-10.6.xml
 /usr/share/osinfo/os/apple.com/macosx-10.7.xml
+/usr/share/osinfo/os/archlinux.org/archlinux-rolling.xml
 /usr/share/osinfo/os/asianux.com/asianux-4.6.xml
 /usr/share/osinfo/os/asianux.com/asianux-4.7.xml
 /usr/share/osinfo/os/asianux.com/asianux-7.0.xml
 /usr/share/osinfo/os/asianux.com/asianux-7.1.xml
 /usr/share/osinfo/os/asianux.com/asianux-7.2.xml
+/usr/share/osinfo/os/asianux.com/asianux-7.3.xml
 /usr/share/osinfo/os/asianux.com/asianux-unknown.xml
+/usr/share/osinfo/os/centos.org/centos-5.0.xml
+/usr/share/osinfo/os/centos.org/centos-5.1.xml
+/usr/share/osinfo/os/centos.org/centos-5.10.xml
+/usr/share/osinfo/os/centos.org/centos-5.11.xml
+/usr/share/osinfo/os/centos.org/centos-5.2.xml
+/usr/share/osinfo/os/centos.org/centos-5.3.xml
+/usr/share/osinfo/os/centos.org/centos-5.4.xml
+/usr/share/osinfo/os/centos.org/centos-5.5.xml
+/usr/share/osinfo/os/centos.org/centos-5.6.xml
+/usr/share/osinfo/os/centos.org/centos-5.7.xml
+/usr/share/osinfo/os/centos.org/centos-5.8.xml
+/usr/share/osinfo/os/centos.org/centos-5.9.xml
 /usr/share/osinfo/os/centos.org/centos-6.0.xml
 /usr/share/osinfo/os/centos.org/centos-6.1.xml
+/usr/share/osinfo/os/centos.org/centos-6.10.xml
 /usr/share/osinfo/os/centos.org/centos-6.2.xml
 /usr/share/osinfo/os/centos.org/centos-6.3.xml
 /usr/share/osinfo/os/centos.org/centos-6.4.xml
@@ -229,6 +261,13 @@ tar --strip-components=1 -xJf %{SOURCE1} -C %{buildroot}/usr/share/osinfo
 /usr/share/osinfo/os/centos.org/centos-6.8.xml
 /usr/share/osinfo/os/centos.org/centos-6.9.xml
 /usr/share/osinfo/os/centos.org/centos-7.0.xml
+/usr/share/osinfo/os/cirros-cloud.net/cirros-0.3.0.xml
+/usr/share/osinfo/os/cirros-cloud.net/cirros-0.3.1.xml
+/usr/share/osinfo/os/cirros-cloud.net/cirros-0.3.2.xml
+/usr/share/osinfo/os/cirros-cloud.net/cirros-0.3.3.xml
+/usr/share/osinfo/os/cirros-cloud.net/cirros-0.3.4.xml
+/usr/share/osinfo/os/cirros-cloud.net/cirros-0.3.5.xml
+/usr/share/osinfo/os/cirros-cloud.net/cirros-0.4.0.xml
 /usr/share/osinfo/os/debian.org/debian-1.1.xml
 /usr/share/osinfo/os/debian.org/debian-1.2.xml
 /usr/share/osinfo/os/debian.org/debian-1.3.xml
@@ -244,7 +283,73 @@ tar --strip-components=1 -xJf %{SOURCE1} -C %{buildroot}/usr/share/osinfo
 /usr/share/osinfo/os/debian.org/debian-8.xml
 /usr/share/osinfo/os/debian.org/debian-9.xml
 /usr/share/osinfo/os/debian.org/debian-testing.xml
+/usr/share/osinfo/os/dragonflybsd.org/dragonflybsd-1.0.xml
+/usr/share/osinfo/os/dragonflybsd.org/dragonflybsd-1.0A.xml
+/usr/share/osinfo/os/dragonflybsd.org/dragonflybsd-1.10.0.xml
+/usr/share/osinfo/os/dragonflybsd.org/dragonflybsd-1.10.1.xml
+/usr/share/osinfo/os/dragonflybsd.org/dragonflybsd-1.12.0.xml
+/usr/share/osinfo/os/dragonflybsd.org/dragonflybsd-1.12.1.xml
+/usr/share/osinfo/os/dragonflybsd.org/dragonflybsd-1.12.2.xml
+/usr/share/osinfo/os/dragonflybsd.org/dragonflybsd-1.2.0.xml
+/usr/share/osinfo/os/dragonflybsd.org/dragonflybsd-1.2.1.xml
+/usr/share/osinfo/os/dragonflybsd.org/dragonflybsd-1.2.2.xml
+/usr/share/osinfo/os/dragonflybsd.org/dragonflybsd-1.2.3.xml
+/usr/share/osinfo/os/dragonflybsd.org/dragonflybsd-1.2.4.xml
+/usr/share/osinfo/os/dragonflybsd.org/dragonflybsd-1.2.5.xml
+/usr/share/osinfo/os/dragonflybsd.org/dragonflybsd-1.2.6.xml
+/usr/share/osinfo/os/dragonflybsd.org/dragonflybsd-1.4.0.xml
+/usr/share/osinfo/os/dragonflybsd.org/dragonflybsd-1.4.4.xml
+/usr/share/osinfo/os/dragonflybsd.org/dragonflybsd-1.6.0.xml
+/usr/share/osinfo/os/dragonflybsd.org/dragonflybsd-1.8.0.xml
+/usr/share/osinfo/os/dragonflybsd.org/dragonflybsd-1.8.1.xml
+/usr/share/osinfo/os/dragonflybsd.org/dragonflybsd-2.0.0.xml
+/usr/share/osinfo/os/dragonflybsd.org/dragonflybsd-2.0.1.xml
+/usr/share/osinfo/os/dragonflybsd.org/dragonflybsd-2.10.1.xml
+/usr/share/osinfo/os/dragonflybsd.org/dragonflybsd-2.2.0.xml
+/usr/share/osinfo/os/dragonflybsd.org/dragonflybsd-2.2.1.xml
+/usr/share/osinfo/os/dragonflybsd.org/dragonflybsd-2.4.0.xml
+/usr/share/osinfo/os/dragonflybsd.org/dragonflybsd-2.4.1.xml
+/usr/share/osinfo/os/dragonflybsd.org/dragonflybsd-2.6.1.xml
+/usr/share/osinfo/os/dragonflybsd.org/dragonflybsd-2.6.2.xml
+/usr/share/osinfo/os/dragonflybsd.org/dragonflybsd-2.6.3.xml
+/usr/share/osinfo/os/dragonflybsd.org/dragonflybsd-2.8.2.xml
+/usr/share/osinfo/os/dragonflybsd.org/dragonflybsd-3.0.1.xml
+/usr/share/osinfo/os/dragonflybsd.org/dragonflybsd-3.2.1.xml
+/usr/share/osinfo/os/dragonflybsd.org/dragonflybsd-3.4.1.xml
+/usr/share/osinfo/os/dragonflybsd.org/dragonflybsd-3.4.2.xml
+/usr/share/osinfo/os/dragonflybsd.org/dragonflybsd-3.4.3.xml
+/usr/share/osinfo/os/dragonflybsd.org/dragonflybsd-3.6.0.xml
+/usr/share/osinfo/os/dragonflybsd.org/dragonflybsd-3.6.1.xml
+/usr/share/osinfo/os/dragonflybsd.org/dragonflybsd-3.6.2.xml
+/usr/share/osinfo/os/dragonflybsd.org/dragonflybsd-3.8.0.xml
+/usr/share/osinfo/os/dragonflybsd.org/dragonflybsd-3.8.1.xml
+/usr/share/osinfo/os/dragonflybsd.org/dragonflybsd-3.8.2.xml
+/usr/share/osinfo/os/dragonflybsd.org/dragonflybsd-4.0.0.xml
+/usr/share/osinfo/os/dragonflybsd.org/dragonflybsd-4.0.1.xml
+/usr/share/osinfo/os/dragonflybsd.org/dragonflybsd-4.2.0.xml
+/usr/share/osinfo/os/dragonflybsd.org/dragonflybsd-4.2.1.xml
+/usr/share/osinfo/os/dragonflybsd.org/dragonflybsd-4.2.3.xml
+/usr/share/osinfo/os/dragonflybsd.org/dragonflybsd-4.2.4.xml
+/usr/share/osinfo/os/dragonflybsd.org/dragonflybsd-4.4.1.xml
+/usr/share/osinfo/os/dragonflybsd.org/dragonflybsd-4.4.2.xml
+/usr/share/osinfo/os/dragonflybsd.org/dragonflybsd-4.4.3.xml
+/usr/share/osinfo/os/dragonflybsd.org/dragonflybsd-4.6.0.xml
+/usr/share/osinfo/os/dragonflybsd.org/dragonflybsd-4.6.1.xml
+/usr/share/osinfo/os/dragonflybsd.org/dragonflybsd-4.6.2.xml
+/usr/share/osinfo/os/dragonflybsd.org/dragonflybsd-4.8.0.xml
+/usr/share/osinfo/os/dragonflybsd.org/dragonflybsd-4.8.1.xml
+/usr/share/osinfo/os/dragonflybsd.org/dragonflybsd-5.0.0.xml
+/usr/share/osinfo/os/dragonflybsd.org/dragonflybsd-5.0.1.xml
+/usr/share/osinfo/os/dragonflybsd.org/dragonflybsd-5.0.2.xml
+/usr/share/osinfo/os/dragonflybsd.org/dragonflybsd-5.2.0.xml
+/usr/share/osinfo/os/dragonflybsd.org/dragonflybsd-5.2.1.xml
+/usr/share/osinfo/os/dragonflybsd.org/dragonflybsd-5.2.2.xml
+/usr/share/osinfo/os/dragonflybsd.org/dragonflybsd-5.4.0.xml
+/usr/share/osinfo/os/dragonflybsd.org/dragonflybsd-5.4.1.xml
+/usr/share/osinfo/os/dragonflybsd.org/dragonflybsd-5.4.2.xml
+/usr/share/osinfo/os/dragonflybsd.org/dragonflybsd-5.4.3.xml
 /usr/share/osinfo/os/endlessos.com/eos-3.3.xml
+/usr/share/osinfo/os/endlessos.com/eos-3.4.xml
 /usr/share/osinfo/os/fedoraproject.org/fedora-1.xml
 /usr/share/osinfo/os/fedoraproject.org/fedora-10.xml
 /usr/share/osinfo/os/fedoraproject.org/fedora-11.xml
@@ -265,14 +370,21 @@ tar --strip-components=1 -xJf %{SOURCE1} -C %{buildroot}/usr/share/osinfo
 /usr/share/osinfo/os/fedoraproject.org/fedora-25.xml
 /usr/share/osinfo/os/fedoraproject.org/fedora-26.xml
 /usr/share/osinfo/os/fedoraproject.org/fedora-27.xml
+/usr/share/osinfo/os/fedoraproject.org/fedora-28.xml
+/usr/share/osinfo/os/fedoraproject.org/fedora-29.xml
 /usr/share/osinfo/os/fedoraproject.org/fedora-3.xml
+/usr/share/osinfo/os/fedoraproject.org/fedora-30.xml
 /usr/share/osinfo/os/fedoraproject.org/fedora-4.xml
 /usr/share/osinfo/os/fedoraproject.org/fedora-5.xml
 /usr/share/osinfo/os/fedoraproject.org/fedora-6.xml
 /usr/share/osinfo/os/fedoraproject.org/fedora-7.xml
 /usr/share/osinfo/os/fedoraproject.org/fedora-8.xml
 /usr/share/osinfo/os/fedoraproject.org/fedora-9.xml
+/usr/share/osinfo/os/fedoraproject.org/fedora-rawhide.xml
 /usr/share/osinfo/os/fedoraproject.org/fedora-unknown.xml
+/usr/share/osinfo/os/fedoraproject.org/silverblue-28.xml
+/usr/share/osinfo/os/fedoraproject.org/silverblue-29.xml
+/usr/share/osinfo/os/fedoraproject.org/silverblue-30.xml
 /usr/share/osinfo/os/freebsd.org/freebsd-1.0.xml
 /usr/share/osinfo/os/freebsd.org/freebsd-10.0.xml
 /usr/share/osinfo/os/freebsd.org/freebsd-10.1.xml
@@ -281,6 +393,8 @@ tar --strip-components=1 -xJf %{SOURCE1} -C %{buildroot}/usr/share/osinfo
 /usr/share/osinfo/os/freebsd.org/freebsd-10.4.xml
 /usr/share/osinfo/os/freebsd.org/freebsd-11.0.xml
 /usr/share/osinfo/os/freebsd.org/freebsd-11.1.xml
+/usr/share/osinfo/os/freebsd.org/freebsd-11.2.xml
+/usr/share/osinfo/os/freebsd.org/freebsd-12.0.xml
 /usr/share/osinfo/os/freebsd.org/freebsd-2.0.5.xml
 /usr/share/osinfo/os/freebsd.org/freebsd-2.0.xml
 /usr/share/osinfo/os/freebsd.org/freebsd-2.2.8.xml
@@ -326,11 +440,18 @@ tar --strip-components=1 -xJf %{SOURCE1} -C %{buildroot}/usr/share/osinfo
 /usr/share/osinfo/os/freebsd.org/freebsd-9.2.xml
 /usr/share/osinfo/os/freebsd.org/freebsd-9.3.xml
 /usr/share/osinfo/os/freedos.org/freedos-1.2.xml
+/usr/share/osinfo/os/gentoo.org/gentoo-rolling.xml
 /usr/share/osinfo/os/gnome.org/gnome-3.6.xml
 /usr/share/osinfo/os/gnome.org/gnome-3.8.xml
 /usr/share/osinfo/os/gnome.org/gnome-continuous-3.10.xml
 /usr/share/osinfo/os/gnome.org/gnome-continuous-3.12.xml
 /usr/share/osinfo/os/gnome.org/gnome-continuous-3.14.xml
+/usr/share/osinfo/os/haiku-os.org/haiku-nightly.xml
+/usr/share/osinfo/os/haiku-os.org/haiku-r1alpha1.xml
+/usr/share/osinfo/os/haiku-os.org/haiku-r1alpha2.xml
+/usr/share/osinfo/os/haiku-os.org/haiku-r1alpha3.xml
+/usr/share/osinfo/os/haiku-os.org/haiku-r1alpha4.1.xml
+/usr/share/osinfo/os/haiku-os.org/haiku-r1beta1.xml
 /usr/share/osinfo/os/mageia.org/mageia-1.xml
 /usr/share/osinfo/os/mageia.org/mageia-2.xml
 /usr/share/osinfo/os/mageia.org/mageia-3.xml
@@ -377,6 +498,7 @@ tar --strip-components=1 -xJf %{SOURCE1} -C %{buildroot}/usr/share/osinfo
 /usr/share/osinfo/os/microsoft.com/win-2k12.xml
 /usr/share/osinfo/os/microsoft.com/win-2k12r2.xml
 /usr/share/osinfo/os/microsoft.com/win-2k16.xml
+/usr/share/osinfo/os/microsoft.com/win-2k19.xml
 /usr/share/osinfo/os/microsoft.com/win-2k3.xml
 /usr/share/osinfo/os/microsoft.com/win-2k3r2.xml
 /usr/share/osinfo/os/microsoft.com/win-2k8.xml
@@ -412,7 +534,10 @@ tar --strip-components=1 -xJf %{SOURCE1} -C %{buildroot}/usr/share/osinfo
 /usr/share/osinfo/os/netbsd.org/netbsd-6.1.xml
 /usr/share/osinfo/os/netbsd.org/netbsd-7.0.xml
 /usr/share/osinfo/os/netbsd.org/netbsd-7.1.1.xml
+/usr/share/osinfo/os/netbsd.org/netbsd-7.1.2.xml
 /usr/share/osinfo/os/netbsd.org/netbsd-7.1.xml
+/usr/share/osinfo/os/netbsd.org/netbsd-7.2.xml
+/usr/share/osinfo/os/netbsd.org/netbsd-8.0.xml
 /usr/share/osinfo/os/novell.com/netware-4.xml
 /usr/share/osinfo/os/novell.com/netware-5.xml
 /usr/share/osinfo/os/novell.com/netware-6.xml
@@ -436,6 +561,8 @@ tar --strip-components=1 -xJf %{SOURCE1} -C %{buildroot}/usr/share/osinfo
 /usr/share/osinfo/os/openbsd.org/openbsd-6.1.xml
 /usr/share/osinfo/os/openbsd.org/openbsd-6.2.xml
 /usr/share/osinfo/os/openbsd.org/openbsd-6.3.xml
+/usr/share/osinfo/os/openbsd.org/openbsd-6.4.xml
+/usr/share/osinfo/os/openbsd.org/openbsd-6.5.xml
 /usr/share/osinfo/os/opensuse.org/opensuse-10.2.xml
 /usr/share/osinfo/os/opensuse.org/opensuse-10.3.xml
 /usr/share/osinfo/os/opensuse.org/opensuse-11.0.xml
@@ -448,13 +575,53 @@ tar --strip-components=1 -xJf %{SOURCE1} -C %{buildroot}/usr/share/osinfo
 /usr/share/osinfo/os/opensuse.org/opensuse-12.3.xml
 /usr/share/osinfo/os/opensuse.org/opensuse-13.1.xml
 /usr/share/osinfo/os/opensuse.org/opensuse-13.2.xml
+/usr/share/osinfo/os/opensuse.org/opensuse-15.0.xml
+/usr/share/osinfo/os/opensuse.org/opensuse-15.1.xml
 /usr/share/osinfo/os/opensuse.org/opensuse-42.1.xml
 /usr/share/osinfo/os/opensuse.org/opensuse-42.2.xml
 /usr/share/osinfo/os/opensuse.org/opensuse-42.3.xml
 /usr/share/osinfo/os/opensuse.org/opensuse-factory.xml
 /usr/share/osinfo/os/opensuse.org/opensuse-tumbleweed.xml
 /usr/share/osinfo/os/opensuse.org/opensuse-unknown.xml
+/usr/share/osinfo/os/oracle.com/oel-4.4.xml
+/usr/share/osinfo/os/oracle.com/oel-4.5.xml
+/usr/share/osinfo/os/oracle.com/oel-4.6.xml
+/usr/share/osinfo/os/oracle.com/oel-4.7.xml
+/usr/share/osinfo/os/oracle.com/oel-4.8.xml
+/usr/share/osinfo/os/oracle.com/oel-4.9.xml
+/usr/share/osinfo/os/oracle.com/oel-5.0.xml
+/usr/share/osinfo/os/oracle.com/oel-5.1.xml
+/usr/share/osinfo/os/oracle.com/oel-5.2.xml
+/usr/share/osinfo/os/oracle.com/oel-5.3.xml
+/usr/share/osinfo/os/oracle.com/oel-5.4.xml
+/usr/share/osinfo/os/oracle.com/ol-5.10.xml
+/usr/share/osinfo/os/oracle.com/ol-5.11.xml
+/usr/share/osinfo/os/oracle.com/ol-5.5.xml
+/usr/share/osinfo/os/oracle.com/ol-5.6.xml
+/usr/share/osinfo/os/oracle.com/ol-5.7.xml
+/usr/share/osinfo/os/oracle.com/ol-5.8.xml
+/usr/share/osinfo/os/oracle.com/ol-5.9.xml
+/usr/share/osinfo/os/oracle.com/ol-6.0.xml
+/usr/share/osinfo/os/oracle.com/ol-6.1.xml
+/usr/share/osinfo/os/oracle.com/ol-6.10.xml
+/usr/share/osinfo/os/oracle.com/ol-6.2.xml
+/usr/share/osinfo/os/oracle.com/ol-6.3.xml
+/usr/share/osinfo/os/oracle.com/ol-6.4.xml
+/usr/share/osinfo/os/oracle.com/ol-6.5.xml
+/usr/share/osinfo/os/oracle.com/ol-6.6.xml
+/usr/share/osinfo/os/oracle.com/ol-6.7.xml
+/usr/share/osinfo/os/oracle.com/ol-6.8.xml
+/usr/share/osinfo/os/oracle.com/ol-6.9.xml
+/usr/share/osinfo/os/oracle.com/ol-7.0.xml
+/usr/share/osinfo/os/oracle.com/ol-7.1.xml
+/usr/share/osinfo/os/oracle.com/ol-7.2.xml
+/usr/share/osinfo/os/oracle.com/ol-7.3.xml
+/usr/share/osinfo/os/oracle.com/ol-7.4.xml
+/usr/share/osinfo/os/oracle.com/ol-7.5.xml
+/usr/share/osinfo/os/oracle.com/ol-7.6.xml
+/usr/share/osinfo/os/oracle.com/ol-8.0.xml
 /usr/share/osinfo/os/oracle.com/solaris-11.xml
+/usr/share/osinfo/os/pureos.net/pureos-8.xml
 /usr/share/osinfo/os/redhat.com/rhel-2.1.1.xml
 /usr/share/osinfo/os/redhat.com/rhel-2.1.2.xml
 /usr/share/osinfo/os/redhat.com/rhel-2.1.3.xml
@@ -495,8 +662,10 @@ tar --strip-components=1 -xJf %{SOURCE1} -C %{buildroot}/usr/share/osinfo
 /usr/share/osinfo/os/redhat.com/rhel-5.7.xml
 /usr/share/osinfo/os/redhat.com/rhel-5.8.xml
 /usr/share/osinfo/os/redhat.com/rhel-5.9.xml
+/usr/share/osinfo/os/redhat.com/rhel-6-unknown.xml
 /usr/share/osinfo/os/redhat.com/rhel-6.0.xml
 /usr/share/osinfo/os/redhat.com/rhel-6.1.xml
+/usr/share/osinfo/os/redhat.com/rhel-6.10.xml
 /usr/share/osinfo/os/redhat.com/rhel-6.2.xml
 /usr/share/osinfo/os/redhat.com/rhel-6.3.xml
 /usr/share/osinfo/os/redhat.com/rhel-6.4.xml
@@ -505,14 +674,22 @@ tar --strip-components=1 -xJf %{SOURCE1} -C %{buildroot}/usr/share/osinfo
 /usr/share/osinfo/os/redhat.com/rhel-6.7.xml
 /usr/share/osinfo/os/redhat.com/rhel-6.8.xml
 /usr/share/osinfo/os/redhat.com/rhel-6.9.xml
+/usr/share/osinfo/os/redhat.com/rhel-7-unknown.xml
 /usr/share/osinfo/os/redhat.com/rhel-7.0.xml
 /usr/share/osinfo/os/redhat.com/rhel-7.1.xml
 /usr/share/osinfo/os/redhat.com/rhel-7.2.xml
 /usr/share/osinfo/os/redhat.com/rhel-7.3.xml
 /usr/share/osinfo/os/redhat.com/rhel-7.4.xml
+/usr/share/osinfo/os/redhat.com/rhel-7.5.xml
+/usr/share/osinfo/os/redhat.com/rhel-7.6.xml
+/usr/share/osinfo/os/redhat.com/rhel-8-unknown.xml
+/usr/share/osinfo/os/redhat.com/rhel-8.0.xml
 /usr/share/osinfo/os/redhat.com/rhel-atomic-7.0.xml
 /usr/share/osinfo/os/redhat.com/rhel-atomic-7.1.xml
 /usr/share/osinfo/os/redhat.com/rhel-atomic-7.2.xml
+/usr/share/osinfo/os/redhat.com/rhel-atomic-7.3.xml
+/usr/share/osinfo/os/redhat.com/rhel-atomic-7.4.xml
+/usr/share/osinfo/os/redhat.com/rhel-unknown.xml
 /usr/share/osinfo/os/redhat.com/rhl-1.0.xml
 /usr/share/osinfo/os/redhat.com/rhl-1.1.xml
 /usr/share/osinfo/os/redhat.com/rhl-2.0.xml
@@ -533,9 +710,47 @@ tar --strip-components=1 -xJf %{SOURCE1} -C %{buildroot}/usr/share/osinfo
 /usr/share/osinfo/os/redhat.com/rhl-7.xml
 /usr/share/osinfo/os/redhat.com/rhl-8.0.xml
 /usr/share/osinfo/os/redhat.com/rhl-9.xml
+/usr/share/osinfo/os/scientificlinux.org/scientificlinux-5.0.xml
+/usr/share/osinfo/os/scientificlinux.org/scientificlinux-5.1.xml
+/usr/share/osinfo/os/scientificlinux.org/scientificlinux-5.10.xml
+/usr/share/osinfo/os/scientificlinux.org/scientificlinux-5.11.xml
+/usr/share/osinfo/os/scientificlinux.org/scientificlinux-5.2.xml
+/usr/share/osinfo/os/scientificlinux.org/scientificlinux-5.3.xml
+/usr/share/osinfo/os/scientificlinux.org/scientificlinux-5.4.xml
+/usr/share/osinfo/os/scientificlinux.org/scientificlinux-5.5.xml
+/usr/share/osinfo/os/scientificlinux.org/scientificlinux-5.6.xml
+/usr/share/osinfo/os/scientificlinux.org/scientificlinux-5.7.xml
+/usr/share/osinfo/os/scientificlinux.org/scientificlinux-5.8.xml
+/usr/share/osinfo/os/scientificlinux.org/scientificlinux-5.9.xml
+/usr/share/osinfo/os/scientificlinux.org/scientificlinux-6.0.xml
+/usr/share/osinfo/os/scientificlinux.org/scientificlinux-6.1.xml
+/usr/share/osinfo/os/scientificlinux.org/scientificlinux-6.10.xml
+/usr/share/osinfo/os/scientificlinux.org/scientificlinux-6.2.xml
+/usr/share/osinfo/os/scientificlinux.org/scientificlinux-6.3.xml
+/usr/share/osinfo/os/scientificlinux.org/scientificlinux-6.4.xml
+/usr/share/osinfo/os/scientificlinux.org/scientificlinux-6.5.xml
+/usr/share/osinfo/os/scientificlinux.org/scientificlinux-6.6.xml
+/usr/share/osinfo/os/scientificlinux.org/scientificlinux-6.7.xml
+/usr/share/osinfo/os/scientificlinux.org/scientificlinux-6.8.xml
+/usr/share/osinfo/os/scientificlinux.org/scientificlinux-6.9.xml
+/usr/share/osinfo/os/scientificlinux.org/scientificlinux-7-unknown.xml
+/usr/share/osinfo/os/scientificlinux.org/scientificlinux-7.0.xml
+/usr/share/osinfo/os/scientificlinux.org/scientificlinux-7.1.xml
+/usr/share/osinfo/os/scientificlinux.org/scientificlinux-7.2.xml
+/usr/share/osinfo/os/scientificlinux.org/scientificlinux-7.3.xml
+/usr/share/osinfo/os/scientificlinux.org/scientificlinux-7.4.xml
+/usr/share/osinfo/os/scientificlinux.org/scientificlinux-7.5.xml
+/usr/share/osinfo/os/scientificlinux.org/scientificlinux-7.6.xml
 /usr/share/osinfo/os/sun.com/opensolaris-2009.06.xml
 /usr/share/osinfo/os/sun.com/solaris-10.xml
 /usr/share/osinfo/os/sun.com/solaris-9.xml
+/usr/share/osinfo/os/suse.com/caasp-1.0.xml
+/usr/share/osinfo/os/suse.com/caasp-2.0.xml
+/usr/share/osinfo/os/suse.com/caasp-3.0.xml
+/usr/share/osinfo/os/suse.com/caasp-unknown.xml
+/usr/share/osinfo/os/suse.com/sle-15-unknown.xml
+/usr/share/osinfo/os/suse.com/sle-15.xml
+/usr/share/osinfo/os/suse.com/sle-unknown.xml
 /usr/share/osinfo/os/suse.com/sled-10.1.xml
 /usr/share/osinfo/os/suse.com/sled-10.2.xml
 /usr/share/osinfo/os/suse.com/sled-10.3.xml
@@ -546,9 +761,11 @@ tar --strip-components=1 -xJf %{SOURCE1} -C %{buildroot}/usr/share/osinfo
 /usr/share/osinfo/os/suse.com/sled-11.3.xml
 /usr/share/osinfo/os/suse.com/sled-11.4.xml
 /usr/share/osinfo/os/suse.com/sled-11.xml
+/usr/share/osinfo/os/suse.com/sled-12-unknown.xml
 /usr/share/osinfo/os/suse.com/sled-12.1.xml
 /usr/share/osinfo/os/suse.com/sled-12.2.xml
 /usr/share/osinfo/os/suse.com/sled-12.3.xml
+/usr/share/osinfo/os/suse.com/sled-12.4.xml
 /usr/share/osinfo/os/suse.com/sled-12.xml
 /usr/share/osinfo/os/suse.com/sled-9.xml
 /usr/share/osinfo/os/suse.com/sles-10.1.xml
@@ -561,12 +778,16 @@ tar --strip-components=1 -xJf %{SOURCE1} -C %{buildroot}/usr/share/osinfo
 /usr/share/osinfo/os/suse.com/sles-11.3.xml
 /usr/share/osinfo/os/suse.com/sles-11.4.xml
 /usr/share/osinfo/os/suse.com/sles-11.xml
+/usr/share/osinfo/os/suse.com/sles-12-unknown.xml
 /usr/share/osinfo/os/suse.com/sles-12.1.xml
 /usr/share/osinfo/os/suse.com/sles-12.2.xml
 /usr/share/osinfo/os/suse.com/sles-12.3.xml
+/usr/share/osinfo/os/suse.com/sles-12.4.xml
 /usr/share/osinfo/os/suse.com/sles-12.xml
 /usr/share/osinfo/os/suse.com/sles-9.xml
 /usr/share/osinfo/os/system76.com/popos-17.10.xml
+/usr/share/osinfo/os/system76.com/popos-18.04.xml
+/usr/share/osinfo/os/system76.com/popos-18.10.xml
 /usr/share/osinfo/os/ubuntu.com/ubuntu-10.04.xml
 /usr/share/osinfo/os/ubuntu.com/ubuntu-10.10.xml
 /usr/share/osinfo/os/ubuntu.com/ubuntu-11.04.xml
@@ -583,6 +804,9 @@ tar --strip-components=1 -xJf %{SOURCE1} -C %{buildroot}/usr/share/osinfo
 /usr/share/osinfo/os/ubuntu.com/ubuntu-16.10.xml
 /usr/share/osinfo/os/ubuntu.com/ubuntu-17.04.xml
 /usr/share/osinfo/os/ubuntu.com/ubuntu-17.10.xml
+/usr/share/osinfo/os/ubuntu.com/ubuntu-18.04.xml
+/usr/share/osinfo/os/ubuntu.com/ubuntu-18.10.xml
+/usr/share/osinfo/os/ubuntu.com/ubuntu-19.04.xml
 /usr/share/osinfo/os/ubuntu.com/ubuntu-4.10.xml
 /usr/share/osinfo/os/ubuntu.com/ubuntu-5.04.xml
 /usr/share/osinfo/os/ubuntu.com/ubuntu-5.10.xml
@@ -594,6 +818,7 @@ tar --strip-components=1 -xJf %{SOURCE1} -C %{buildroot}/usr/share/osinfo
 /usr/share/osinfo/os/ubuntu.com/ubuntu-8.10.xml
 /usr/share/osinfo/os/ubuntu.com/ubuntu-9.04.xml
 /usr/share/osinfo/os/ubuntu.com/ubuntu-9.10.xml
+/usr/share/osinfo/os/voidlinux.org/voidlinux-rolling.xml
 /usr/share/osinfo/platform/linux-kvm.org/qemu-kvm-1.0.1.xml
 /usr/share/osinfo/platform/linux-kvm.org/qemu-kvm-1.0.xml
 /usr/share/osinfo/platform/linux-kvm.org/qemu-kvm-1.1.0.xml
