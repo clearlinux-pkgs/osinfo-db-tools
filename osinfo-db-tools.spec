@@ -6,7 +6,7 @@
 #
 Name     : osinfo-db-tools
 Version  : 1.5.0
-Release  : 8
+Release  : 9
 URL      : https://releases.pagure.org/libosinfo/osinfo-db-tools-1.5.0.tar.gz
 Source0  : https://releases.pagure.org/libosinfo/osinfo-db-tools-1.5.0.tar.gz
 Source1  : https://releases.pagure.org/libosinfo/osinfo-db-20190611.tar.xz
