@@ -5,12 +5,12 @@
 # Source0 file verified with key 0xEE926C2BDACC177B (fabiano@fidencio.org)
 #
 Name     : osinfo-db-tools
-Version  : 1.5.0
-Release  : 9
-URL      : https://releases.pagure.org/libosinfo/osinfo-db-tools-1.5.0.tar.gz
-Source0  : https://releases.pagure.org/libosinfo/osinfo-db-tools-1.5.0.tar.gz
+Version  : 1.6.0
+Release  : 10
+URL      : https://releases.pagure.org/libosinfo/osinfo-db-tools-1.6.0.tar.gz
+Source0  : https://releases.pagure.org/libosinfo/osinfo-db-tools-1.6.0.tar.gz
 Source1  : https://releases.pagure.org/libosinfo/osinfo-db-20190611.tar.xz
-Source99 : https://releases.pagure.org/libosinfo/osinfo-db-tools-1.5.0.tar.gz.asc
+Source2 : https://releases.pagure.org/libosinfo/osinfo-db-tools-1.6.0.tar.gz.asc
 Summary  : Tools for managing the osinfo database
 Group    : Development/Tools
 License  : GPL-2.0 GPL-2.0+
@@ -26,6 +26,7 @@ BuildRequires : pkgconfig(glib-2.0)
 BuildRequires : pkgconfig(gobject-2.0)
 BuildRequires : pkgconfig(json-glib-1.0)
 BuildRequires : pkgconfig(libarchive)
+BuildRequires : pkgconfig(libsoup-2.4)
 BuildRequires : pkgconfig(libxml-2.0)
 BuildRequires : pkgconfig(libxslt)
 BuildRequires : pytest
@@ -78,18 +79,19 @@ man components for the osinfo-db-tools package.
 
 
 %prep
-%setup -q -n osinfo-db-tools-1.5.0
+%setup -q -n osinfo-db-tools-1.6.0
 cd ..
-%setup -q -T -D -n osinfo-db-tools-1.5.0 -b 1
+%setup -q -T -D -n osinfo-db-tools-1.6.0 -b 1
 mkdir -p osinfo-db
-cp -r %{_topdir}/BUILD/osinfo-db-20190611/* %{_topdir}/BUILD/osinfo-db-tools-1.5.0/osinfo-db
+cp -r %{_topdir}/BUILD/osinfo-db-20190611/* %{_topdir}/BUILD/osinfo-db-tools-1.6.0/osinfo-db
 
 %build
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1563038883
+export SOURCE_DATE_EPOCH=1568075268
+# -Werror is for werrorists
 export GCC_IGNORE_WERROR=1
 export CFLAGS="$CFLAGS -fno-lto "
 export FCFLAGS="$CFLAGS -fno-lto "
@@ -106,7 +108,7 @@ export no_proxy=localhost,127.0.0.1,0.0.0.0
 make VERBOSE=1 V=1 %{?_smp_mflags} check
 
 %install
-export SOURCE_DATE_EPOCH=1563038883
+export SOURCE_DATE_EPOCH=1568075268
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/osinfo-db-tools
 cp COPYING %{buildroot}/usr/share/package-licenses/osinfo-db-tools/COPYING
