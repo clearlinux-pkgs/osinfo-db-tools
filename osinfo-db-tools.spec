@@ -5,12 +5,12 @@
 # Source0 file verified with key 0xEE926C2BDACC177B (fabiano@fidencio.org)
 #
 Name     : osinfo-db-tools
-Version  : 1.6.0
-Release  : 10
-URL      : https://releases.pagure.org/libosinfo/osinfo-db-tools-1.6.0.tar.gz
-Source0  : https://releases.pagure.org/libosinfo/osinfo-db-tools-1.6.0.tar.gz
-Source1  : https://releases.pagure.org/libosinfo/osinfo-db-20190611.tar.xz
-Source2 : https://releases.pagure.org/libosinfo/osinfo-db-tools-1.6.0.tar.gz.asc
+Version  : 1.7.0
+Release  : 11
+URL      : https://releases.pagure.org/libosinfo/osinfo-db-tools-1.7.0.tar.xz
+Source0  : https://releases.pagure.org/libosinfo/osinfo-db-tools-1.7.0.tar.xz
+Source1  : https://releases.pagure.org/libosinfo/osinfo-db-20191125.tar.xz
+Source2  : https://releases.pagure.org/libosinfo/osinfo-db-tools-1.7.0.tar.xz.asc
 Summary  : Tools for managing the osinfo database
 Group    : Development/Tools
 License  : GPL-2.0 GPL-2.0+
@@ -19,18 +19,15 @@ Requires: osinfo-db-tools-data = %{version}-%{release}
 Requires: osinfo-db-tools-license = %{version}-%{release}
 Requires: osinfo-db-tools-locales = %{version}-%{release}
 Requires: osinfo-db-tools-man = %{version}-%{release}
-BuildRequires : gettext
-BuildRequires : perl(XML::Parser)
-BuildRequires : pkgconfig(gio-2.0)
+BuildRequires : buildreq-meson
+BuildRequires : glib-dev
+BuildRequires : json-glib-dev
+BuildRequires : libarchive-dev
+BuildRequires : libsoup-dev
 BuildRequires : pkgconfig(glib-2.0)
-BuildRequires : pkgconfig(gobject-2.0)
 BuildRequires : pkgconfig(json-glib-1.0)
 BuildRequires : pkgconfig(libarchive)
 BuildRequires : pkgconfig(libsoup-2.4)
-BuildRequires : pkgconfig(libxml-2.0)
-BuildRequires : pkgconfig(libxslt)
-BuildRequires : pytest
-BuildRequires : requests
 
 %description
 This package provides tools for managing the osinfo database of
@@ -79,41 +76,32 @@ man components for the osinfo-db-tools package.
 
 
 %prep
-%setup -q -n osinfo-db-tools-1.6.0
-cd ..
-%setup -q -T -D -n osinfo-db-tools-1.6.0 -b 1
+%setup -q -n osinfo-db-tools-1.7.0
+cd %{_builddir}
+tar xf %{_sourcedir}/osinfo-db-20191125.tar.xz
+cd %{_builddir}/osinfo-db-tools-1.7.0
 mkdir -p osinfo-db
-cp -r %{_topdir}/BUILD/osinfo-db-20190611/* %{_topdir}/BUILD/osinfo-db-tools-1.6.0/osinfo-db
+cp -r %{_builddir}/osinfo-db-20191125/* %{_builddir}/osinfo-db-tools-1.7.0/osinfo-db
 
 %build
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1568075268
-# -Werror is for werrorists
+export SOURCE_DATE_EPOCH=1580325446
 export GCC_IGNORE_WERROR=1
 export CFLAGS="$CFLAGS -fno-lto "
 export FCFLAGS="$CFLAGS -fno-lto "
 export FFLAGS="$CFLAGS -fno-lto "
 export CXXFLAGS="$CXXFLAGS -fno-lto "
-%configure --disable-static
-make  %{?_smp_mflags}
-
-%check
-export LANG=C.UTF-8
-export http_proxy=http://127.0.0.1:9/
-export https_proxy=http://127.0.0.1:9/
-export no_proxy=localhost,127.0.0.1,0.0.0.0
-make VERBOSE=1 V=1 %{?_smp_mflags} check
+CFLAGS="$CFLAGS" CXXFLAGS="$CXXFLAGS" LDFLAGS="$LDFLAGS" meson --libdir=lib64 --prefix=/usr --buildtype=plain   builddir
+ninja -v -C builddir
 
 %install
-export SOURCE_DATE_EPOCH=1568075268
-rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/osinfo-db-tools
-cp COPYING %{buildroot}/usr/share/package-licenses/osinfo-db-tools/COPYING
-cp osinfo-db/LICENSE %{buildroot}/usr/share/package-licenses/osinfo-db-tools/osinfo-db_LICENSE
-%make_install
+cp %{_builddir}/osinfo-db-tools-1.7.0/COPYING %{buildroot}/usr/share/package-licenses/osinfo-db-tools/06877624ea5c77efe3b7e39b0f909eda6e25a4ec
+cp %{_builddir}/osinfo-db-tools-1.7.0/osinfo-db/LICENSE %{buildroot}/usr/share/package-licenses/osinfo-db-tools/06877624ea5c77efe3b7e39b0f909eda6e25a4ec
+DESTDIR=%{buildroot} ninja -C builddir install
 %find_lang osinfo-db-tools
 ## install_append content
 mkdir -p %{buildroot}/usr/share/osinfo
@@ -184,8 +172,6 @@ tar --strip-components=1 -xJf %{SOURCE1} -C %{buildroot}/usr/share/osinfo
 /usr/share/osinfo/device/xen.org/xen-vkbd.xml
 /usr/share/osinfo/device/xen.org/xen-vscsi.xml
 /usr/share/osinfo/device/xen.org/xen-vtpm.xml
-/usr/share/osinfo/install-script/centos.org/centos-kickstart-desktop.xml
-/usr/share/osinfo/install-script/centos.org/centos-kickstart-jeos.xml
 /usr/share/osinfo/install-script/debian.org/debian-preseed-desktop.xml
 /usr/share/osinfo/install-script/debian.org/debian-preseed-jeos.xml
 /usr/share/osinfo/install-script/fedoraproject.org/fedora-kickstart-desktop.xml
@@ -210,7 +196,9 @@ tar --strip-components=1 -xJf %{SOURCE1} -C %{buildroot}/usr/share/osinfo
 /usr/share/osinfo/os/altlinux.org/alt-8.0.xml
 /usr/share/osinfo/os/altlinux.org/alt-8.1.xml
 /usr/share/osinfo/os/altlinux.org/alt-8.2.xml
+/usr/share/osinfo/os/altlinux.org/alt-9.0.xml
 /usr/share/osinfo/os/altlinux.org/alt-p8.starterkits.xml
+/usr/share/osinfo/os/altlinux.org/alt-p9.starterkits.xml
 /usr/share/osinfo/os/altlinux.org/alt-sisyphus.xml
 /usr/share/osinfo/os/altlinux.org/altlinux-1.0.xml
 /usr/share/osinfo/os/altlinux.org/altlinux-2.0.xml
@@ -223,6 +211,7 @@ tar --strip-components=1 -xJf %{SOURCE1} -C %{buildroot}/usr/share/osinfo
 /usr/share/osinfo/os/altlinux.org/altlinux-6.0.xml
 /usr/share/osinfo/os/altlinux.org/altlinux-7.0.xml
 /usr/share/osinfo/os/android-x86.org/android-x86-8.1.xml
+/usr/share/osinfo/os/android-x86.org/android-x86-9.0.xml
 /usr/share/osinfo/os/apple.com/macosx-10.0.xml
 /usr/share/osinfo/os/apple.com/macosx-10.1.xml
 /usr/share/osinfo/os/apple.com/macosx-10.2.xml
@@ -263,6 +252,7 @@ tar --strip-components=1 -xJf %{SOURCE1} -C %{buildroot}/usr/share/osinfo
 /usr/share/osinfo/os/centos.org/centos-6.8.xml
 /usr/share/osinfo/os/centos.org/centos-6.9.xml
 /usr/share/osinfo/os/centos.org/centos-7.0.xml
+/usr/share/osinfo/os/centos.org/centos-8.xml
 /usr/share/osinfo/os/cirros-cloud.net/cirros-0.3.0.xml
 /usr/share/osinfo/os/cirros-cloud.net/cirros-0.3.1.xml
 /usr/share/osinfo/os/cirros-cloud.net/cirros-0.3.2.xml
@@ -273,6 +263,7 @@ tar --strip-components=1 -xJf %{SOURCE1} -C %{buildroot}/usr/share/osinfo
 /usr/share/osinfo/os/debian.org/debian-1.1.xml
 /usr/share/osinfo/os/debian.org/debian-1.2.xml
 /usr/share/osinfo/os/debian.org/debian-1.3.xml
+/usr/share/osinfo/os/debian.org/debian-10.xml
 /usr/share/osinfo/os/debian.org/debian-2.0.xml
 /usr/share/osinfo/os/debian.org/debian-2.1.xml
 /usr/share/osinfo/os/debian.org/debian-2.2.xml
@@ -350,8 +341,15 @@ tar --strip-components=1 -xJf %{SOURCE1} -C %{buildroot}/usr/share/osinfo
 /usr/share/osinfo/os/dragonflybsd.org/dragonflybsd-5.4.1.xml
 /usr/share/osinfo/os/dragonflybsd.org/dragonflybsd-5.4.2.xml
 /usr/share/osinfo/os/dragonflybsd.org/dragonflybsd-5.4.3.xml
+/usr/share/osinfo/os/dragonflybsd.org/dragonflybsd-5.6.xml
+/usr/share/osinfo/os/elementary.io/elementary-5.0.xml
+/usr/share/osinfo/os/endlessos.com/eos-3.1.xml
+/usr/share/osinfo/os/endlessos.com/eos-3.2.xml
 /usr/share/osinfo/os/endlessos.com/eos-3.3.xml
 /usr/share/osinfo/os/endlessos.com/eos-3.4.xml
+/usr/share/osinfo/os/endlessos.com/eos-3.5.xml
+/usr/share/osinfo/os/endlessos.com/eos-3.6.xml
+/usr/share/osinfo/os/endlessos.com/eos-3.7.xml
 /usr/share/osinfo/os/fedoraproject.org/fedora-1.xml
 /usr/share/osinfo/os/fedoraproject.org/fedora-10.xml
 /usr/share/osinfo/os/fedoraproject.org/fedora-11.xml
@@ -376,6 +374,7 @@ tar --strip-components=1 -xJf %{SOURCE1} -C %{buildroot}/usr/share/osinfo
 /usr/share/osinfo/os/fedoraproject.org/fedora-29.xml
 /usr/share/osinfo/os/fedoraproject.org/fedora-3.xml
 /usr/share/osinfo/os/fedoraproject.org/fedora-30.xml
+/usr/share/osinfo/os/fedoraproject.org/fedora-31.xml
 /usr/share/osinfo/os/fedoraproject.org/fedora-4.xml
 /usr/share/osinfo/os/fedoraproject.org/fedora-5.xml
 /usr/share/osinfo/os/fedoraproject.org/fedora-6.xml
@@ -387,6 +386,7 @@ tar --strip-components=1 -xJf %{SOURCE1} -C %{buildroot}/usr/share/osinfo
 /usr/share/osinfo/os/fedoraproject.org/silverblue-28.xml
 /usr/share/osinfo/os/fedoraproject.org/silverblue-29.xml
 /usr/share/osinfo/os/fedoraproject.org/silverblue-30.xml
+/usr/share/osinfo/os/fedoraproject.org/silverblue-31.xml
 /usr/share/osinfo/os/freebsd.org/freebsd-1.0.xml
 /usr/share/osinfo/os/freebsd.org/freebsd-10.0.xml
 /usr/share/osinfo/os/freebsd.org/freebsd-10.1.xml
@@ -396,6 +396,7 @@ tar --strip-components=1 -xJf %{SOURCE1} -C %{buildroot}/usr/share/osinfo
 /usr/share/osinfo/os/freebsd.org/freebsd-11.0.xml
 /usr/share/osinfo/os/freebsd.org/freebsd-11.1.xml
 /usr/share/osinfo/os/freebsd.org/freebsd-11.2.xml
+/usr/share/osinfo/os/freebsd.org/freebsd-11.3.xml
 /usr/share/osinfo/os/freebsd.org/freebsd-12.0.xml
 /usr/share/osinfo/os/freebsd.org/freebsd-2.0.5.xml
 /usr/share/osinfo/os/freebsd.org/freebsd-2.0.xml
@@ -493,6 +494,8 @@ tar --strip-components=1 -xJf %{SOURCE1} -C %{buildroot}/usr/share/osinfo
 /usr/share/osinfo/os/mandriva.com/mes-5.1.xml
 /usr/share/osinfo/os/microsoft.com/msdos-6.22.xml
 /usr/share/osinfo/os/microsoft.com/win-1.0.xml
+/usr/share/osinfo/os/microsoft.com/win-10.d/post-installable-drivers.xml
+/usr/share/osinfo/os/microsoft.com/win-10.d/pre-installable-drivers.xml
 /usr/share/osinfo/os/microsoft.com/win-10.xml
 /usr/share/osinfo/os/microsoft.com/win-2.0.xml
 /usr/share/osinfo/os/microsoft.com/win-2.1.xml
@@ -506,13 +509,21 @@ tar --strip-components=1 -xJf %{SOURCE1} -C %{buildroot}/usr/share/osinfo
 /usr/share/osinfo/os/microsoft.com/win-2k8.xml
 /usr/share/osinfo/os/microsoft.com/win-2k8r2.xml
 /usr/share/osinfo/os/microsoft.com/win-3.1.xml
+/usr/share/osinfo/os/microsoft.com/win-7.d/post-installable-drivers.xml
+/usr/share/osinfo/os/microsoft.com/win-7.d/pre-installable-drivers.xml
 /usr/share/osinfo/os/microsoft.com/win-7.xml
+/usr/share/osinfo/os/microsoft.com/win-8.1.d/post-installable-drivers.xml
+/usr/share/osinfo/os/microsoft.com/win-8.1.d/pre-installable-drivers.xml
 /usr/share/osinfo/os/microsoft.com/win-8.1.xml
+/usr/share/osinfo/os/microsoft.com/win-8.d/post-installable-drivers.xml
+/usr/share/osinfo/os/microsoft.com/win-8.d/pre-installable-drivers.xml
 /usr/share/osinfo/os/microsoft.com/win-8.xml
 /usr/share/osinfo/os/microsoft.com/win-95.xml
 /usr/share/osinfo/os/microsoft.com/win-98.xml
 /usr/share/osinfo/os/microsoft.com/win-me.xml
 /usr/share/osinfo/os/microsoft.com/win-vista.xml
+/usr/share/osinfo/os/microsoft.com/win-xp.d/post-installable-drivers.xml
+/usr/share/osinfo/os/microsoft.com/win-xp.d/pre-installable-drivers.xml
 /usr/share/osinfo/os/microsoft.com/win-xp.xml
 /usr/share/osinfo/os/microsoft.com/winnt-3.1.xml
 /usr/share/osinfo/os/microsoft.com/winnt-3.5.xml
@@ -540,6 +551,7 @@ tar --strip-components=1 -xJf %{SOURCE1} -C %{buildroot}/usr/share/osinfo
 /usr/share/osinfo/os/netbsd.org/netbsd-7.1.xml
 /usr/share/osinfo/os/netbsd.org/netbsd-7.2.xml
 /usr/share/osinfo/os/netbsd.org/netbsd-8.0.xml
+/usr/share/osinfo/os/netbsd.org/netbsd-8.1.xml
 /usr/share/osinfo/os/novell.com/netware-4.xml
 /usr/share/osinfo/os/novell.com/netware-5.xml
 /usr/share/osinfo/os/novell.com/netware-6.xml
@@ -565,6 +577,7 @@ tar --strip-components=1 -xJf %{SOURCE1} -C %{buildroot}/usr/share/osinfo
 /usr/share/osinfo/os/openbsd.org/openbsd-6.3.xml
 /usr/share/osinfo/os/openbsd.org/openbsd-6.4.xml
 /usr/share/osinfo/os/openbsd.org/openbsd-6.5.xml
+/usr/share/osinfo/os/openbsd.org/openbsd-6.6.xml
 /usr/share/osinfo/os/opensuse.org/opensuse-10.2.xml
 /usr/share/osinfo/os/opensuse.org/opensuse-10.3.xml
 /usr/share/osinfo/os/opensuse.org/opensuse-11.0.xml
@@ -684,8 +697,10 @@ tar --strip-components=1 -xJf %{SOURCE1} -C %{buildroot}/usr/share/osinfo
 /usr/share/osinfo/os/redhat.com/rhel-7.4.xml
 /usr/share/osinfo/os/redhat.com/rhel-7.5.xml
 /usr/share/osinfo/os/redhat.com/rhel-7.6.xml
+/usr/share/osinfo/os/redhat.com/rhel-7.7.xml
 /usr/share/osinfo/os/redhat.com/rhel-8-unknown.xml
 /usr/share/osinfo/os/redhat.com/rhel-8.0.xml
+/usr/share/osinfo/os/redhat.com/rhel-8.1.xml
 /usr/share/osinfo/os/redhat.com/rhel-atomic-7.0.xml
 /usr/share/osinfo/os/redhat.com/rhel-atomic-7.1.xml
 /usr/share/osinfo/os/redhat.com/rhel-atomic-7.2.xml
@@ -751,6 +766,7 @@ tar --strip-components=1 -xJf %{SOURCE1} -C %{buildroot}/usr/share/osinfo
 /usr/share/osinfo/os/suse.com/caasp-3.0.xml
 /usr/share/osinfo/os/suse.com/caasp-unknown.xml
 /usr/share/osinfo/os/suse.com/sle-15-unknown.xml
+/usr/share/osinfo/os/suse.com/sle-15.1.xml
 /usr/share/osinfo/os/suse.com/sle-15.xml
 /usr/share/osinfo/os/suse.com/sle-unknown.xml
 /usr/share/osinfo/os/suse.com/sled-10.1.xml
@@ -809,6 +825,7 @@ tar --strip-components=1 -xJf %{SOURCE1} -C %{buildroot}/usr/share/osinfo
 /usr/share/osinfo/os/ubuntu.com/ubuntu-18.04.xml
 /usr/share/osinfo/os/ubuntu.com/ubuntu-18.10.xml
 /usr/share/osinfo/os/ubuntu.com/ubuntu-19.04.xml
+/usr/share/osinfo/os/ubuntu.com/ubuntu-19.10.xml
 /usr/share/osinfo/os/ubuntu.com/ubuntu-4.10.xml
 /usr/share/osinfo/os/ubuntu.com/ubuntu-5.04.xml
 /usr/share/osinfo/os/ubuntu.com/ubuntu-5.10.xml
@@ -893,8 +910,7 @@ tar --strip-components=1 -xJf %{SOURCE1} -C %{buildroot}/usr/share/osinfo
 
 %files license
 %defattr(0644,root,root,0755)
-/usr/share/package-licenses/osinfo-db-tools/COPYING
-/usr/share/package-licenses/osinfo-db-tools/osinfo-db_LICENSE
+/usr/share/package-licenses/osinfo-db-tools/06877624ea5c77efe3b7e39b0f909eda6e25a4ec
 
 %files man
 %defattr(0644,root,root,0755)

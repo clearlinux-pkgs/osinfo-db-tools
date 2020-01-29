@@ -1,3 +1,9 @@
-1.6.0
-pytest
-requests
+1.7.0
+glib-dev
+json-glib-dev
+libarchive-dev
+libsoup-dev
+pkgconfig(glib-2.0)
+pkgconfig(json-glib-1.0)
+pkgconfig(libarchive)
+pkgconfig(libsoup-2.4)
