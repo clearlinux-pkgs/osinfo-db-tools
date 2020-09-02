@@ -5,12 +5,11 @@
 # Source0 file verified with key 0xEE926C2BDACC177B (fabiano@fidencio.org)
 #
 Name     : osinfo-db-tools
-Version  : 1.7.0
-Release  : 12
-URL      : https://releases.pagure.org/libosinfo/osinfo-db-tools-1.7.0.tar.xz
-Source0  : https://releases.pagure.org/libosinfo/osinfo-db-tools-1.7.0.tar.xz
-Source1  : https://releases.pagure.org/libosinfo/osinfo-db-20191125.tar.xz
-Source2  : https://releases.pagure.org/libosinfo/osinfo-db-tools-1.7.0.tar.xz.asc
+Version  : 1.8.0
+Release  : 13
+URL      : https://releases.pagure.org/libosinfo/osinfo-db-tools-1.8.0.tar.xz
+Source0  : https://releases.pagure.org/libosinfo/osinfo-db-tools-1.8.0.tar.xz
+Source1  : https://releases.pagure.org/libosinfo/osinfo-db-tools-1.8.0.tar.xz.asc
 Summary  : Tools for managing the osinfo database
 Group    : Development/Tools
 License  : GPL-2.0 GPL-2.0+
@@ -68,31 +67,26 @@ man components for the osinfo-db-tools package.
 
 
 %prep
-%setup -q -n osinfo-db-tools-1.7.0
-cd %{_builddir}
-tar xf %{_sourcedir}/osinfo-db-20191125.tar.xz
-cd %{_builddir}/osinfo-db-tools-1.7.0
-mkdir -p osinfo-db
-cp -r %{_builddir}/osinfo-db-20191125/* %{_builddir}/osinfo-db-tools-1.7.0/osinfo-db
+%setup -q -n osinfo-db-tools-1.8.0
+cd %{_builddir}/osinfo-db-tools-1.8.0
 
 %build
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1580334744
+export SOURCE_DATE_EPOCH=1599082832
 export GCC_IGNORE_WERROR=1
 export CFLAGS="$CFLAGS -fno-lto "
-export FCFLAGS="$CFLAGS -fno-lto "
-export FFLAGS="$CFLAGS -fno-lto "
+export FCFLAGS="$FFLAGS -fno-lto "
+export FFLAGS="$FFLAGS -fno-lto "
 export CXXFLAGS="$CXXFLAGS -fno-lto "
 CFLAGS="$CFLAGS" CXXFLAGS="$CXXFLAGS" LDFLAGS="$LDFLAGS" meson --libdir=lib64 --prefix=/usr --buildtype=plain   builddir
 ninja -v -C builddir
 
 %install
 mkdir -p %{buildroot}/usr/share/package-licenses/osinfo-db-tools
-cp %{_builddir}/osinfo-db-tools-1.7.0/COPYING %{buildroot}/usr/share/package-licenses/osinfo-db-tools/06877624ea5c77efe3b7e39b0f909eda6e25a4ec
-cp %{_builddir}/osinfo-db-tools-1.7.0/osinfo-db/LICENSE %{buildroot}/usr/share/package-licenses/osinfo-db-tools/06877624ea5c77efe3b7e39b0f909eda6e25a4ec
+cp %{_builddir}/osinfo-db-tools-1.8.0/COPYING %{buildroot}/usr/share/package-licenses/osinfo-db-tools/06877624ea5c77efe3b7e39b0f909eda6e25a4ec
 DESTDIR=%{buildroot} ninja -C builddir install
 %find_lang osinfo-db-tools
 
