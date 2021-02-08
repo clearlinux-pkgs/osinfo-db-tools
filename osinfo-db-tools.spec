@@ -5,11 +5,11 @@
 # Source0 file verified with key 0xEE926C2BDACC177B (fabiano@fidencio.org)
 #
 Name     : osinfo-db-tools
-Version  : 1.8.0
-Release  : 14
-URL      : https://releases.pagure.org/libosinfo/osinfo-db-tools-1.8.0.tar.xz
-Source0  : https://releases.pagure.org/libosinfo/osinfo-db-tools-1.8.0.tar.xz
-Source1  : https://releases.pagure.org/libosinfo/osinfo-db-tools-1.8.0.tar.xz.asc
+Version  : 1.9.0
+Release  : 15
+URL      : https://releases.pagure.org/libosinfo/osinfo-db-tools-1.9.0.tar.xz
+Source0  : https://releases.pagure.org/libosinfo/osinfo-db-tools-1.9.0.tar.xz
+Source1  : https://releases.pagure.org/libosinfo/osinfo-db-tools-1.9.0.tar.xz.asc
 Summary  : Tools for managing the osinfo database
 Group    : Development/Tools
 License  : GPL-2.0 GPL-2.0+
@@ -67,15 +67,15 @@ man components for the osinfo-db-tools package.
 
 
 %prep
-%setup -q -n osinfo-db-tools-1.8.0
-cd %{_builddir}/osinfo-db-tools-1.8.0
+%setup -q -n osinfo-db-tools-1.9.0
+cd %{_builddir}/osinfo-db-tools-1.9.0
 
 %build
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1599082832
+export SOURCE_DATE_EPOCH=1612811486
 export GCC_IGNORE_WERROR=1
 export CFLAGS="$CFLAGS -fno-lto "
 export FCFLAGS="$FFLAGS -fno-lto "
@@ -86,7 +86,7 @@ ninja -v -C builddir
 
 %install
 mkdir -p %{buildroot}/usr/share/package-licenses/osinfo-db-tools
-cp %{_builddir}/osinfo-db-tools-1.8.0/COPYING %{buildroot}/usr/share/package-licenses/osinfo-db-tools/06877624ea5c77efe3b7e39b0f909eda6e25a4ec
+cp %{_builddir}/osinfo-db-tools-1.9.0/COPYING %{buildroot}/usr/share/package-licenses/osinfo-db-tools/06877624ea5c77efe3b7e39b0f909eda6e25a4ec
 DESTDIR=%{buildroot} ninja -C builddir install
 %find_lang osinfo-db-tools
 
