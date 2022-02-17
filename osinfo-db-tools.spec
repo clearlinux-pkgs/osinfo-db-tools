@@ -6,7 +6,7 @@
 #
 Name     : osinfo-db-tools
 Version  : 1.9.0
-Release  : 15
+Release  : 16
 URL      : https://releases.pagure.org/libosinfo/osinfo-db-tools-1.9.0.tar.xz
 Source0  : https://releases.pagure.org/libosinfo/osinfo-db-tools-1.9.0.tar.xz
 Source1  : https://releases.pagure.org/libosinfo/osinfo-db-tools-1.9.0.tar.xz.asc
@@ -75,7 +75,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1612811486
+export SOURCE_DATE_EPOCH=1645060066
 export GCC_IGNORE_WERROR=1
 export CFLAGS="$CFLAGS -fno-lto "
 export FCFLAGS="$FFLAGS -fno-lto "
