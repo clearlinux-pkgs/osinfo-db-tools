@@ -1,4 +1,4 @@
-1.9.0
+1.10.0
 glib-dev
 json-glib-dev
 libarchive-dev
@@ -7,3 +7,4 @@ pkgconfig(glib-2.0)
 pkgconfig(json-glib-1.0)
 pkgconfig(libarchive)
 pkgconfig(libsoup-2.4)
+pkgconfig(libsoup-3.0)
